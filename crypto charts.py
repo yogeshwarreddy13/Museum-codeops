@@ -27,7 +27,9 @@ Scatter plot for x "id" against y "current price"
 df[:10].plot.scatter(x='id', y='current_price', colormap='viridis')
 plt.title("scatter plot")
 plt.show()
-
+"""
+Bar plot for x "id" against y "current price
+"""
 sns.barplot(x='id', y='current_price', data=df[:10])
 plt.title("bar chart of price vs id")
 plt.show()
