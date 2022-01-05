@@ -26,65 +26,118 @@ class Converter:
     """
     converter class to convert a list of dictionary objects to various formats
     """
-    def __init__(self, objectlist):
-        self.objectlist = objectlist
-
-    def convert_to_csv(self, fnames):
+    @staticmethod
+    def convert_to_csv(object_list, field_names, path):
         """
         converts list of dictionary objects to csv
-
-         :param fnames: list of field names
+         param object_list: list containing dictionary objects
+         param field_names: list of field names
+         param path: output path of generated csv
         """
+        if object_list is None:
+            raise TypeError("object_list cannot be none")
+        if not isinstance(object_list, list) or not isinstance(object_list[0], dict):
+            raise TypeError("list of dictionaries is expected as input for object_list parameter")
+        if path is None:
+            raise TypeError("path cannot be none")
+        if field_names is None:
+            raise TypeError("field_names cannot be none")
         try:
-            with open("mymuseum.csv", 'w') as csvfile:
-                writer = csv.DictWriter(csvfile, fieldnames=fnames)
+            with open(path, 'w') as csvfile:
+                writer = csv.DictWriter(csvfile, fieldnames=field_names)
                 writer.writeheader()
-                for obj in self.objectlist:
-                    d = {key: value for key, value in obj.items() if key in fnames}
+                for obj in object_list:
+                    d = {key: value for key, value in obj.items() if key in field_names}
                     writer.writerow(d)
         except PermissionError as pe:
-            logging.error('Error occured in convert_to_csv func : ' + str(pe))
+            logging.error("Permission error occurred in convert_to_csv func : " + str(pe))
+        except FileNotFoundError as fe:
+            logging.error("FileNotFound error occurred in convert_to_csv func : " + str(fe))
 
-    def convert_to_pdf(self):
+    @staticmethod
+    def convert_to_pdf(object_list, path):
         """
         converts list of dictionary objects to pdf
+         : param object_list: list containing dictionary objects
+         : param path: output path of generated pdf
         """
+        if object_list is None:
+            raise TypeError("object_list cannot be none")
+        if not isinstance(object_list, list) or not isinstance(object_list[0], dict):
+            raise TypeError("list of dictionaries is expected as input for object_list parameter")
+        if path is None:
+            raise TypeError("path cannot be none")
         try:
-            df = pd.DataFrame(data=self.objectlist)
-            temp_html_filename = 'temp.html'
+            df = pd.DataFrame(data=object_list)
+            temp_html_filename = "temp.html"
             df.to_html(temp_html_filename)
-            pdfkit.from_file(temp_html_filename, output_path="mymuseum.pdf",
-                             options={'page-height': '1500', 'page-width': '660'})
+            pdfkit.from_file(temp_html_filename, output_path=path,
+                             options={"page-height": "1500", "page-width": "660"})
             os.remove(temp_html_filename)
         except PermissionError as pe:
-            logging.error('Error occured in convert_to_pdf func : ' + str(pe))
+            logging.error("Permission error occurred in convert_to_pdf func : " + str(pe))
+        except FileNotFoundError as fe:
+            logging.error("FileNotFound error occurred in convert_to_pdf func : " + str(fe))
 
-    def convert_to_html(self):
+    @staticmethod
+    def convert_to_html(object_list, path):
         """
         converts list of dictionary objects to html
+          : param object_list: list containing dictionary objects
+         : param path: output path of generated html
         """
+        if object_list is None:
+            raise TypeError("object_list cannot be none")
+        if not isinstance(object_list, list) or not isinstance(object_list[0], dict):
+            raise TypeError("list of dictionaries is expected as input for object_list parameter")
+        if path is None:
+            raise TypeError("path cannot be none")
         try:
-            df = pd.DataFrame(data=self.objectlist)
-            df.to_html("myhtml.html")
+            df = pd.DataFrame(data=object_list)
+            df.to_html(path)
         except PermissionError as pe:
-            logging.error('Error occured in convert_to_html func : ' + str(pe))
+            logging.error("Permission error occurred in convert_to_html func : " + str(pe))
+        except FileNotFoundError as fe:
+            logging.error("FileNotFound error occurred in convert_to_html func : " + str(fe))
 
-    def convert_to_xml(self):
+    @staticmethod
+    def convert_to_xml(object_list, path):
         """
         converts list of dictionary objects to xml
+          : param object_list: list containing dictionary objects
+         : param path: output path of generated xml
         """
+        if object_list is None:
+            raise TypeError("object_list cannot be none")
+        if not isinstance(object_list, list) or not isinstance(object_list[0], dict):
+            raise TypeError("list of dictionaries is expected as input for object_list parameter")
+        if path is None:
+            raise TypeError("path cannot be none")
         try:
-            df = pd.DataFrame(data=self.objectlist)
-            df.to_xml("myxml.xml")
+            df = pd.DataFrame(data=object_list)
+            df.to_xml(path)
         except PermissionError as pe:
-            logging.error('Error occured in convert_to_xml func : ' + str(pe))
+            logging.error("Permission error occurred in convert_to_xml func : " + str(pe))
+        except FileNotFoundError as fe:
+            logging.error("FileNotFound error occurred in convert_to_xml func : " + str(fe))
 
-    def convert_to_excel(self):
+    @staticmethod
+    def convert_to_excel(object_list, path):
         """
         converts list of dictionary objects to excel
+          : param object_list: list containing dictionary objects
+         : param path: output path of generated excel
         """
+        if object_list is None:
+            raise TypeError("object_list cannot be none")
+        if not isinstance(object_list, list) or not isinstance(object_list[0], dict):
+            raise TypeError("list of dictionaries is expected as input for object_list parameter")
+        if path is None:
+            raise TypeError("path cannot be none")
         try:
-            df = pd.DataFrame(data=self.objectlist)
-            df.to_excel("myexcel.xlsx")
+            df = pd.DataFrame(data=object_list)
+            df.to_excel(path)
         except PermissionError as pe:
-            logging.error('Error occured in convert_to_excel func : ' + str(pe))
+            logging.error("Permission error occurred in convert_to_excel func : " + str(pe))
+        except FileNotFoundError as fe:
+            logging.error("FileNotFound error occurred in convert_to_excel func : " + str(fe))
