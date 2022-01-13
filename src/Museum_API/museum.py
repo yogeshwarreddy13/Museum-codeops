@@ -1,5 +1,8 @@
-import requests
+"""
+museum module will fetch required data from museum API
+"""
 import logging
+import requests
 
 
 logging.basicConfig(filename="logging_file.log", level=logging.ERROR,
@@ -23,10 +26,10 @@ class MuseumAPI:
 
             url = self.base_url+endpoint
             response = requests.get(url, headers=self.headers)
-        except (requests.ConnectionError, requests.Timeout, requests.ConnectTimeout) as ce:
-            logging.error("Error occurred while getting response: " + str(ce))
-        except requests.HTTPError as he:
-            logging.error("Error occurred while getting response: " + str(he))
+        except (requests.ConnectionError, requests.Timeout, requests.ConnectTimeout) as c_e:
+            logging.error("Error occurred while getting response: %s", ({str(c_e)}))
+        except requests.HTTPError as h_e:
+            logging.error("Error occurred while getting response: %s", ({str(h_e)}))
 
         return response
 
@@ -40,7 +43,11 @@ class MuseumAPI:
             list of object ids
         """
         endpoint = "objects"
-        return self.get_response(endpoint).json()
+        response = self.get_response(endpoint)
+        if response.ok:
+            return response.json()
+
+        return None
 
     def get_object_for_ids(self, object_id):
         """
@@ -50,4 +57,8 @@ class MuseumAPI:
         """
 
         endpoint = "objects/" + str(object_id)
-        return self.get_response(endpoint).json()
+        response = self.get_response(endpoint)
+        if response.ok:
+            return response.json()
+
+        return None

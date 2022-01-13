@@ -1,8 +1,10 @@
-import csv
+"""
+converters module will convert data from one form to another form.
+"""
 import logging
+import os
 import pandas as pd
 import pdfkit
-import os
 
 
 def flatten(obj, keys):
@@ -16,8 +18,8 @@ def flatten(obj, keys):
         values = obj[key]
         if values:
             for value in values:
-                for k, v in value.items():
-                    obj[k] = v
+                for k, val in value.items():
+                    obj[k] = val
             del obj[key]
     return obj
 
@@ -27,11 +29,10 @@ class Converter:
     converter class to convert a list of dictionary objects to various formats
     """
     @staticmethod
-    def convert_to_csv(object_list, field_names, path):
+    def convert_to_csv(object_list, path):
         """
         converts list of dictionary objects to csv
          param object_list: list containing dictionary objects
-         param field_names: list of field names
          param path: output path of generated csv
         """
         if object_list is None:
@@ -40,19 +41,19 @@ class Converter:
             raise TypeError("list of dictionaries is expected as input for object_list parameter")
         if path is None:
             raise TypeError("path cannot be none")
-        if field_names is None:
-            raise TypeError("field_names cannot be none")
         try:
-            with open(path, 'w') as csvfile:
-                writer = csv.DictWriter(csvfile, fieldnames=field_names)
-                writer.writeheader()
-                for obj in object_list:
-                    d = {key: value for key, value in obj.items() if key in field_names}
-                    writer.writerow(d)
-        except PermissionError as pe:
-            logging.error("Permission error occurred in convert_to_csv func : " + str(pe))
-        except FileNotFoundError as fe:
-            logging.error("FileNotFound error occurred in convert_to_csv func : " + str(fe))
+            dataframe = pd.DataFrame(data=object_list)
+            dataframe.to_csv(path, index=False)
+            # with open(path, 'w') as csvfile:
+            #    writer = csv.DictWriter(csvfile, fieldnames=field_names)
+            #    writer.writeheader()
+            #    for obj in object_list:
+            #        d = {key: value for key, value in obj.items() if key in field_names}
+            #        writer.writerow(d)
+        except PermissionError as p_e:
+            logging.error("Permission error occurred in convert_to_csv func :%s", ({str(p_e)}))
+        except FileNotFoundError as f_e:
+            logging.error("FileNotFound error occurred in convert_to_csv func :%s", ({str(f_e)}))
 
     @staticmethod
     def convert_to_pdf(object_list, path):
@@ -68,16 +69,16 @@ class Converter:
         if path is None:
             raise TypeError("path cannot be none")
         try:
-            df = pd.DataFrame(data=object_list)
+            dataframe = pd.DataFrame(data=object_list)
             temp_html_filename = "temp.html"
-            df.to_html(temp_html_filename)
+            dataframe.to_html(temp_html_filename)
             pdfkit.from_file(temp_html_filename, output_path=path,
-                             options={"page-height": "1500", "page-width": "660"})
+                             options={"page-height": "2500", "page-width": "1270"})
             os.remove(temp_html_filename)
-        except PermissionError as pe:
-            logging.error("Permission error occurred in convert_to_pdf func : " + str(pe))
-        except FileNotFoundError as fe:
-            logging.error("FileNotFound error occurred in convert_to_pdf func : " + str(fe))
+        except PermissionError as p_e:
+            logging.error("Permission error occurred in convert_to_pdf func :%s", ({str(p_e)}))
+        except FileNotFoundError as f_e:
+            logging.error("FileNotFound error occurred in convert_to_pdf func :%s", ({str(f_e)}))
 
     @staticmethod
     def convert_to_html(object_list, path):
@@ -93,12 +94,12 @@ class Converter:
         if path is None:
             raise TypeError("path cannot be none")
         try:
-            df = pd.DataFrame(data=object_list)
-            df.to_html(path)
-        except PermissionError as pe:
-            logging.error("Permission error occurred in convert_to_html func : " + str(pe))
-        except FileNotFoundError as fe:
-            logging.error("FileNotFound error occurred in convert_to_html func : " + str(fe))
+            dataframe = pd.DataFrame(data=object_list)
+            dataframe.to_html(path)
+        except PermissionError as p_e:
+            logging.error("Permission error occurred in convert_to_html func :%s", ({str(p_e)}))
+        except FileNotFoundError as f_e:
+            logging.error("FileNotFound error occurred in convert_to_html func :%s", ({str(f_e)}))
 
     @staticmethod
     def convert_to_xml(object_list, path):
@@ -114,12 +115,12 @@ class Converter:
         if path is None:
             raise TypeError("path cannot be none")
         try:
-            df = pd.DataFrame(data=object_list)
-            df.to_xml(path)
-        except PermissionError as pe:
-            logging.error("Permission error occurred in convert_to_xml func : " + str(pe))
-        except FileNotFoundError as fe:
-            logging.error("FileNotFound error occurred in convert_to_xml func : " + str(fe))
+            dataframe = pd.DataFrame(data=object_list)
+            dataframe.to_xml(path)
+        except PermissionError as p_e:
+            logging.error("Permission error occurred in convert_to_xml func :%s", ({str(p_e)}))
+        except FileNotFoundError as f_e:
+            logging.error("FileNotFound error occurred in convert_to_xml func :%s", ({str(f_e)}))
 
     @staticmethod
     def convert_to_excel(object_list, path):
@@ -135,9 +136,9 @@ class Converter:
         if path is None:
             raise TypeError("path cannot be none")
         try:
-            df = pd.DataFrame(data=object_list)
-            df.to_excel(path)
-        except PermissionError as pe:
-            logging.error("Permission error occurred in convert_to_excel func : " + str(pe))
-        except FileNotFoundError as fe:
-            logging.error("FileNotFound error occurred in convert_to_excel func : " + str(fe))
+            dataframe = pd.DataFrame(data=object_list)
+            dataframe.to_excel(path)
+        except PermissionError as p_e:
+            logging.error("Permission error occurred in convert_to_excel func :%s", ({str(p_e)}))
+        except FileNotFoundError as f_e:
+            logging.error("FileNotFound error occurred in convert_to_excel func :%s", ({str(f_e)}))
